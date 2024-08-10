@@ -1,14 +1,14 @@
-# 1: 使用maven镜像构建
+# 1: 使用maven镜像构建(使用maven镜像构建是没有缓存的, 可能需要较长时间下载相关jar包)
 FROM maven:3.8.6-jdk-8 AS build
 
 WORKDIR /app
 # 复制pom和源代码
-COPY ../../pom.xml /app
-COPY ../.. /app
-
+# 由于Dockerfile无法通过..访问上级目录(docker build特性), 因此只能在外部使用docker build -t xxx -f /path/to/Dockerfile .
+# 或者手动指定构建的目录起点 docker build -t xxx ../..
+COPY . .
 
 # Maven构建
-RUN mvn clean package
+RUN mvn clean package -DskipTests
 
 # 2. 构建运行镜像
 # 该镜像包含一些额外库, 直接用纯java库环境会有问题
