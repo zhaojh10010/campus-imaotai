@@ -51,6 +51,12 @@ spring:
 --- # redis
 spring:
   redis:
+    jedis:
+      pool:
+        max-active: 8 #连接池的最大数据库连接数。设为0表示无限制
+        max-wait: -1 #最大建立连接等待时间。如果超过此时间将接到异常。设为-1表示无限制。
+        max-idle: 8 #最大空闲数
+        min-idle: 0
     # 地址
     host: localhost
     # 端口，默认为6379

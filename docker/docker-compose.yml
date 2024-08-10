@@ -1,0 +1,36 @@
+version : '3'
+
+services:
+  maotai-front:
+    # 该镜像为自己构建(仅含基础nginx和编译好的前端dist包..仅去掉了水印), 也可以指定作者的镜像
+    image: maotai_front:latest
+    container_name: maotai_front
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+    ports:
+      # 最终在网页访问的端口
+      - "8180:80"
+    networks:
+      - maotai
+
+  maotai:
+    # 该镜像为自己构建(仅含编译好的jar包), 也可以指定作者的镜像
+    image: maotai:latest
+    container_name: maotai_back
+    environment:
+      # 时区上海
+      TZ: Asia/Shanghai
+      SERVER_PORT: 8160
+    networks:
+      maotai:
+        # 此ip对应nginx.conf中的后端ip
+        ipv4_address: 172.66.0.2
+
+
+networks:
+  maotai:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: "172.66.0.0/24"
